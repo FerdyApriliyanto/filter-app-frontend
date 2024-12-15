@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       showLoader: true,
       loadingText: const Text("Loading..."),
       navigator: HomeScreen(),
-      durationInSeconds: 5,
+      durationInSeconds: 3,
     );
   }
 }
