@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:filter_app/screens/result_screen.dart';
@@ -12,15 +15,18 @@ class HomeController extends GetxController {
 
   Future<void> pickImage({required String imgSource}) async {
     final ImagePicker picker = ImagePicker();
-    final img = await picker.pickImage(
-        source:
-            imgSource == 'Gallery' ? ImageSource.gallery : ImageSource.camera);
+    final XFile? pickedFile = await picker.pickImage(
+      source: imgSource == 'Gallery' ? ImageSource.gallery : ImageSource.camera,
+    );
 
-    if (img == null) {
+    if (pickedFile == null) {
       return;
     }
 
-    imagePicked.value = img;
+    File file = File(pickedFile.path);
+    File rotatedFile = await FlutterExifRotation.rotateImage(path: file.path);
+
+    imagePicked.value = XFile(rotatedFile.path);
   }
 
   Future<void> sendImage(String filterType) async {
@@ -34,7 +40,9 @@ class HomeController extends GetxController {
         content: const Center(
           child: Column(
             children: [
-              CircularProgressIndicator(color: Colors.black,),
+              CircularProgressIndicator(
+                color: Colors.black,
+              ),
               SizedBox(
                 height: 12,
               ),
