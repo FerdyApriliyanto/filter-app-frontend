@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filter App'),
+        title: const Text('Home'),
         centerTitle: true,
       ),
       body: Center(
@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white),
-                    onPressed: () => controller.pickImage(),
+                    onPressed: () => _showImagePickerOption(context),
                     child: Text(controller.imagePicked.value != null
                         ? 'Change Image'
                         : 'Pick Image')),
@@ -50,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
                                   foregroundColor: Colors.white),
-                              onPressed: () => _showSnackbar(context),
+                              onPressed: () => _showFilterOptions(context),
                               child: const Text('Send'))
                         ],
                       )
@@ -74,41 +74,140 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  void _showSnackbar(BuildContext context) {
-    final snackBar = SnackBar(
-      content: Row(
-        children: [
-          const Expanded(child: Text('Choose filter:')),
-          TextButton(
-            onPressed: () {
-              controller.sendImage('Grayscale');
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            child:
-                const Text('Grayscale', style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {
-              controller.sendImage('Invert');
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            child: const Text('Invert', style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {
-              controller.sendImage('Sepia');
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            child: const Text('Sepia', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.blue,
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(bottom: 50.0, left: 20.0, right: 20.0),
-      duration: const Duration(seconds: 7),
+  void _showImagePickerOption(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  controller.pickImage(imgSource: 'Gallery');
+                },
+                child: Container(
+                  height: 126,
+                  color: Colors.white,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.photo_camera_back_outlined),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text('Gallery'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 0.5,
+              height: 126,
+              color: Colors.black,
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  controller.pickImage(imgSource: 'Camera');
+                },
+                child: Container(
+                  height: 126,
+                  color: Colors.white,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.camera_alt_outlined),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text('Camera'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  void _showFilterOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  controller.sendImage('Grayscale');
+                },
+                child: Container(
+                  height: 80,
+                  color: Colors.white,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Grayscale'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 0.5,
+              height: 80,
+              color: Colors.black,
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  controller.sendImage('Invert');
+                },
+                child: Container(
+                  height: 80,
+                  color: Colors.white,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Invert'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 0.5,
+              height: 80,
+              color: Colors.black,
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  controller.sendImage('Sepia');
+                },
+                child: Container(
+                  height: 80,
+                  color: Colors.white,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Sepia'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

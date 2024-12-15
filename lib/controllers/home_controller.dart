@@ -10,9 +10,11 @@ class HomeController extends GetxController {
 
   final ApiService apiService = ApiService(Dio());
 
-  Future<void> pickImage() async {
+  Future<void> pickImage({required String imgSource}) async {
     final ImagePicker picker = ImagePicker();
-    final img = await picker.pickImage(source: ImageSource.gallery);
+    final img = await picker.pickImage(
+        source:
+            imgSource == 'Gallery' ? ImageSource.gallery : ImageSource.camera);
 
     if (img == null) {
       return;
@@ -28,14 +30,15 @@ class HomeController extends GetxController {
 
     Get.defaultDialog(
         title: '',
+        backgroundColor: Colors.white,
         content: const Center(
           child: Column(
             children: [
-              CircularProgressIndicator(),
+              CircularProgressIndicator(color: Colors.black,),
               SizedBox(
                 height: 12,
               ),
-              Text('Processing')
+              Text('Processing Your Image...')
             ],
           ),
         ));
